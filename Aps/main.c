@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #define Tamanho 10
 #define t 10
 
@@ -8,8 +9,8 @@ void main()
 
 int escolha=1;
 
-// se a escolha for diferente de 5, ele continua... o que inicialmente é verdade
-// pois escolha é igual a 1
+// se a escolha for diferente de 5, ele continua... o que inicialmente ï¿½ verdade
+// pois escolha ï¿½ igual a 1
 while (escolha!=7)
 {
 
@@ -31,7 +32,13 @@ printf("\n\n");
 switch (escolha) {
 
 case 1:
-{  int vetor[15], aux;
+{  
+    time_t data_tempo, data_tempo2;
+    time(&data_tempo);
+    struct tm *antes = localtime(&data_tempo);
+
+
+    int vetor[15], aux;
 
    for(int i = 0; i < 15; i++) {
      printf("Digite o numero %d do vetor: ", i);
@@ -55,10 +62,13 @@ case 1:
    for(int i = 0; i < 15; i ++){
        printf("numero %d eh: %d \n", i, vetor[i]);
    }
+   time(&data_tempo2);
+   struct tm *depois = localtime(&data_tempo2);
 
 
-
-printf("\n\n Opcao escolhida: Ordenacao por troca ");
+    printf("\n\n Opcao escolhida: Ordenacao por troca \n");
+    
+    printf("Tempo decorrido %d e %d", depois->tm_sec, antes->tm_sec);
 
 break;
 }
@@ -78,7 +88,7 @@ case 2:
         printf("%4d", numeros[i]);
     }
 
-     // Algoritmo para fazer a ordenação BubbleSort:
+     // Algoritmo para fazer a ordenaï¿½ï¿½o BubbleSort:
 
       for(contador = 1; contador < Tamanho; contador++){
         for(i = 0; i < Tamanho - 1; i++){
@@ -237,17 +247,17 @@ case 6:
 printf("\n\n   ");
 break;
 }
-// opção padrão
+// opï¿½ï¿½o padrï¿½o
 default:
 {
 //clrscr();
 
-// se for escolhida a opção 7, ele pula o while utilizando continue para isso
+// se for escolhida a opï¿½ï¿½o 7, ele pula o while utilizando continue para isso
 if( escolha==7)
 {
 continue;
 }
-// caso o usuário digite um numero acima de N, ele irá informar que nao existe essa opção
+// caso o usuï¿½rio digite um numero acima de N, ele irï¿½ informar que nao existe essa opï¿½ï¿½o
 printf("\n\n Nenhuma opcao foi escolhida ");
 break;
 }
