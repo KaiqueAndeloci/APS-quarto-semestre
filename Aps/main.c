@@ -1,8 +1,262 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define Tamanho 493
-#define t 10
-#define TAM 5 //tamanho do balde
+#define TAM 999 //tamanho do balde
+
+
+//================================================
+//quick_sort
+//================================================
+void quick_sort(int *a, int left, int right) {
+    int i, j, x, y;
+     
+    i = left;
+    j = right;
+    x = a[(left + right) / 2];
+     
+    while(i <= j) {
+        while(a[i] < x && i < right) {
+            i++;
+        }
+        while(a[j] > x && j > left) {
+            j--;
+        }
+        if(i <= j) {
+            y = a[i];
+            a[i] = a[j];
+            a[j] = y;
+            i++;
+            j--;
+        }
+    }
+     
+    if(j > left) {
+        quick_sort(a, left, j);
+    }
+    if(i < right) {
+        quick_sort(a, i, right);
+    }
+}
+
+//================================================
+//binary_insertion_sort
+//================================================
+int procurando_posicao(int a[], int item, int MIN, int MAX)
+{
+    if (MAX <= MIN)
+        if (item > a[MIN])
+            return MIN + 1;
+        else
+            return MIN;
+
+    int meio = (MIN + MAX) / 2;
+ 
+    if (item == a[MAX])
+        return meio + 1;
+ 
+    if (item > a[MAX])
+        return procurando_posicao(a, item, meio + 1, MAX);
+
+    return procurando_posicao(a, item, MIN, meio - 1);
+}
+ 
+void binary_insertion_sort(int a[], int n)
+{
+    int i, local, j, k, atual;
+ 
+    for (i = 1; i < n; ++i)
+    {
+        j = i - 1;
+        atual = a[i];
+ 
+        // vai retornar a posicao certa6
+        local = procurando_posicao(a, atual, 0, j);
+
+        // vai mover os itens 1 posicao
+        while (j >= local)
+        {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = atual;
+
+    }
+}
+
+//================================================
+//HEAPSORT
+//================================================
+void heapSort(int *Vetor, int N){
+    int i, aux;
+    //Cria a Heap do meio do vetor pra tras
+    for (i = (N - 1)/2; i >= 0; i--){
+        criaHeap(Vetor, i, N-1);
+    }
+    //busco o maior elemendo da heap e coloca na na ultima,
+    //dps penultima e assim vai ate ordenar a heap
+    for (i = N-1; i >= 1; i--){
+        aux = Vetor[0];
+        Vetor [0] = Vetor [i];
+        Vetor [i] = aux;
+        criaHeap(Vetor, 0, i - 1);
+    }
+}
+
+void criaHeap(int *Vetor, int i , int fim){
+    int aux = Vetor[i];
+    int j = i * 2 + 1;
+    while (j <= fim){
+        if (j < fim){
+            //Compara quem � maior entre os dois filhos do pai
+            if(Vetor[j] < Vetor[j + 1]){
+                j = j + 1;
+            }
+        }
+        //Se o filho maior que o pai, o filho se torna o pai
+        if (aux < Vetor[j]){
+            Vetor[i] = Vetor[j];
+            i = j;
+            j = 2 * i + 1;
+        }else{
+            j = fim + 1;
+        }
+    }
+    //Antigo Pai vai para o lugar do filho analisado
+    Vetor[i] = aux;
+}
+
+//================================================
+//SELECTION
+//================================================
+    void selecao(int Vet[], int n){
+
+       int Menor, aux;
+
+       for(int i = 0; i < n - 1; i++){
+           Menor = i;
+        for(int j = i + 1; j < n; j++){
+            if(Vet[Menor] > Vet[j])
+                Menor = j;
+        }
+        if(i != Menor){
+            aux = Vet[i];
+            Vet[i] = Vet[Menor];
+            Vet[Menor] = aux;
+        }
+       }
+    }
+
+//================================================
+//bucketSort
+//================================================
+/*
+struct balde
+{
+    int qtd;
+    int valores[999];
+};
+
+void bucketSort(int *V, int N)
+{
+     int i, j, maior, menor, nroBaldes, pos;
+    struct balde *bd;
+    //Acha o valor maior e menor
+    maior = menor = V[0];
+    for(i = 1; i < N; i++){
+     if(V[i] > maior) maior = V[i];
+     if(V[i] < menor) menor = V[i]; 
+    }
+
+//Inicializa baldes
+nroBaldes = (maior - menor) / TAM + 1;
+bd = (struct balde *) malloc(nroBaldes * sizeof(struct balde));
+for(i = 0; i <nroBaldes; i++)
+ bd[i].qtd = 0;
+
+//Distribui os valores nos baldes
+for(i = 0; i < N; i++){
+    pos = (V[i] - menor)/TAM;
+    bd[pos].valores[bd[pos].qtd] = V[i];
+    bd[pos].qtd++;
+}
+//Ordena os baldes e coloca no array
+pos = 0;
+for(i = 0;N < nroBaldes; i++){
+    insertionSort(bd[i].valores, bd[i].qtd);
+    for(j = 0; j < bd[i].qtd; j++){
+        V[pos] = bd[i].valores[j];
+        pos++;
+    }
+}
+ free(bd);
+}*/
+
+//================================================
+//Mergesort
+//================================================
+void merge(int arr[], int l, int m, int r)
+{
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 = r - m;
+  
+    int L[n1], R[n2];
+  
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+  
+    i = 0; 
+    j = 0; 
+    k = l; 
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+  
+
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+  
+
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int arr[], int l, int r)
+{
+    if (l < r) {
+
+        int m = l + (r - l) / 2;
+
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+  
+        merge(arr, l, m, r);
+    }
+}
+
+//================================================
+//Printar
+//================================================
+int printar(int Vetor[], int n){
+    for(int i = 0; i < n; i++){
+        printf("%d , ",Vetor[i]);
+    }
+}
 
 void main()
 {
@@ -108,9 +362,7 @@ int VETOR[] = {2503,	4266,	5930,	7374,	4148,	7519,	5227,	6358,	8287,	6168,
  215,	8132,	7222,	7081,	9121,	8254,	8169,	9246,	3604
 };
 
-
-int escolha;
-
+int escolha = 9;
 // se a escolha for diferente de 0, ele continua... o que inicialmente eh verdade
 while (escolha!=0)
 {
@@ -132,12 +384,11 @@ printf("\n\n");
 // estrutura switch
 switch (escolha) {
 
-
 case 1:
 {
-
+    printar(VETOR, 999);
     //int numeros[Tamanho];
-    int numeros[] = {0,1,3,2};
+    int Tamanho = 999;
 
     int i, aux, contador;
 
@@ -147,20 +398,18 @@ case 1:
 
       for(contador = 1; contador < Tamanho; contador++){
         for(i = 0; i < Tamanho - 1; i++){
-            if(numeros[i] > numeros[i + 1]){
-                aux = numeros[i];
-                numeros[i] = numeros[i + 1];
-                numeros[i + 1] = aux;
+            if(VETOR[i] > VETOR[i + 1]){
+                aux = VETOR[i];
+                VETOR[i] = VETOR[i + 1];
+                VETOR[i + 1] = aux;
             }
         }
       }
 
-      printf("\nElementos do array organizados de froma crescente:\n");
-      for(i = 0; i < Tamanho; i++){
-         printf("%4d ", numeros[i]);
-      }
+    printf("\n\n");
+    printar(VETOR, Tamanho);
 
-      printf("\n");
+    printf("\n");
 
 printf("\n\n Bubble Sort: 2 ");
 
@@ -169,31 +418,34 @@ break;
 
 case 2:
 {
+printar(VETOR, 999);
 quick_sort(VETOR, 0, 999 - 1);
+printf("\n\n");
+printar(VETOR, 999);
 
 break;
 }
+
 case 3:
 {
-    int v[t] = {8,9,1,2,6,7,5,0,3,4};
+    printar(VETOR, 999);
     int aux, i, j;
+    int tamanho = 999;
 
-    for(j = 0; j <= t - 1; j++){
-        aux = v[j];
+    for(j = 0; j <= tamanho - 1; j++){
+        aux = VETOR[j];
         i = j -1;
 
-           while((i >= 0) && (v[i] > aux)){
+           while((i >= 0) && (VETOR[i] > aux)){
 
-              v[i+1] = v[i];
-              v[i] = aux;
+              VETOR[i+1] = VETOR[i];
+              VETOR[i] = aux;
               i--;
            }
     }
 
-   for(i = 0; i <= t -1; i++){
-    printf("%5d", v[i]);
-   }
-   printf("\n\n");
+printf("\n\n");
+printar(VETOR, 999);
 
 printf("\n\n Insertion Sort: ");
 break;
@@ -201,15 +453,12 @@ break;
 
 case 4:
 {
+    printar(VETOR, 999);
     selecao(VETOR,999);
+    printf("\n\n");
+    printar(VETOR, 999);
 
     printf("\n\n");
-
-    //for(int i = 0; i < n; i++){
-    //    printf("%d , ",Vetor[i]);
-    //}
-
-
 
 printf("\n\n Selection Sort  ");
 break;
@@ -217,16 +466,14 @@ break;
 
 case 5:
 {
+    printar(VETOR, 999);
     //tamanho do a[]
-    int n = sizeof(VETOR) / sizeof(VETOR), i;
+    int n = 999;
 
     //FUNCAO binary_insertion_sort VAI ORGANIZAR A LISTA PASSADA NO PARAMETRO
     binary_insertion_sort(VETOR, n);
- 
-    //printf("lista certa: \n");
-    //for (i = 0; i < n; i++)
-    //    printf("%d ", VETOR[i]);
- 
+    printf("\n\n");
+    printar(VETOR, 999);
 
 printf("\n\n");
 break;
@@ -234,7 +481,10 @@ break;
 
 case 6:
 {
-bucketSort(VETOR,999);
+//printar(VETOR, 999);
+//bucketSort(VETOR,999);
+printf("\n\n");
+//printar(vetor1, 999);
 
 printf("\n\n   ");
 break;
@@ -242,15 +492,20 @@ break;
 
 case 7:
 {
+printar(VETOR, 999);
 heapSort(VETOR, 999);
-
+printf("\n\n");
+printar(VETOR, 999);
 printf("\n\n   ");
 break;
 }
 
 case 8:
 {
+printar(VETOR, 999);
 mergeSort(VETOR,0,999 - 1);
+printf("\n\n");
+printar(VETOR, 999);
 
 printf("\n\n   ");
 break;
@@ -279,255 +534,4 @@ break;
 if( escolha==0)
 printf("\n\n O Programa foi fechado");
 
-getch();
-
 }
-//================================================
-//quick_sort
-//================================================
-void quick_sort(int *a, int left, int right) {
-    int i, j, x, y;
-     
-    i = left;
-    j = right;
-    x = a[(left + right) / 2];
-     
-    while(i <= j) {
-        while(a[i] < x && i < right) {
-            i++;
-        }
-        while(a[j] > x && j > left) {
-            j--;
-        }
-        if(i <= j) {
-            y = a[i];
-            a[i] = a[j];
-            a[j] = y;
-            i++;
-            j--;
-        }
-    }
-     
-    if(j > left) {
-        quick_sort(a, left, j);
-    }
-    if(i < right) {
-        quick_sort(a, i, right);
-    }
-}
-
-//================================================
-//binary_insertion_sort
-//================================================
-int procurando_posicao(int a[], int item, int MIN, int MAX)
-{
-    if (MAX <= MIN)
-        if (item > a[MIN])
-            return MIN + 1;
-        else
-            return MIN;
-
-    int meio = (MIN + MAX) / 2;
- 
-    if (item == a[MAX])
-        return meio + 1;
- 
-    if (item > a[MAX])
-        return procurando_posicao(a, item, meio + 1, MAX);
-
-    return procurando_posicao(a, item, MIN, meio - 1);
-}
- 
-void binary_insertion_sort(int a[], int n)
-{
-    int i, local, j, k, atual;
- 
-    for (i = 1; i < n; ++i)
-    {
-        j = i - 1;
-        atual = a[i];
- 
-        // vai retornar a posicao certa6
-        local = procurando_posicao(a, atual, 0, j);
-
-        // vai mover os itens 1 posicao
-        while (j >= local)
-        {
-            a[j + 1] = a[j];
-            j--;
-        }
-        a[j + 1] = atual;
-
-    }
-}
-//================================================
-//HEAPSORT
-//================================================
-void heapSort(int *Vetor, int N){
-    int i, aux;
-    //Cria a Heap do meio do vetor pra tras
-    for (i = (N - 1)/2; i >= 0; i--){
-        criaHeap(Vetor, i, N-1);
-    }
-    //busco o maior elemendo da heap e coloca na na ultima,
-    //dps penultima e assim vai ate ordenar a heap
-    for (i = N-1; i >= 1; i--){
-        aux = Vetor[0];
-        Vetor [0] = Vetor [i];
-        Vetor [i] = aux;
-        criaHeap(Vetor, 0, i - 1);
-    }
-}
-
-void criaHeap(int *Vetor, int i , int fim){
-    int aux = Vetor[i];
-    int j = i * 2 + 1;
-    while (j <= fim){
-        if (j < fim){
-            //Compara quem � maior entre os dois filhos do pai
-            if(Vetor[j] < Vetor[j + 1]){
-                j = j + 1;
-            }
-        }
-        //Se o filho maior que o pai, o filho se torna o pai
-        if (aux < Vetor[j]){
-            Vetor[i] = Vetor[j];
-            i = j;
-            j = 2 * i + 1;
-        }else{
-            j = fim + 1;
-        }
-    }
-    //Antigo Pai vai para o lugar do filho analisado
-    Vetor[i] = aux;
-}
-
-
-//================================================
-//SELECTION
-//================================================
-    void selecao(int Vet[], int n){
-
-       int Menor, aux;
-
-       for(int i = 0; i < n - 1; i++){
-           Menor = i;
-        for(int j = i + 1; j < n; j++){
-            if(Vet[Menor] > Vet[j])
-                Menor = j;
-        }
-        if(i != Menor){
-            aux = Vet[i];
-            Vet[i] = Vet[Menor];
-            Vet[Menor] = aux;
-        }
-       }
-    }
-
-
-//================================================
-//bucketSort
-//================================================
-struct balde
-{
-    int qtd;
-    int valores[TAM];
-};
-
-void bucketSort(int *V, int N)
-{
-     int i, j, maior, menor, nroBaldes, pos;
-    struct balde *bd;
-    //Acha o valor maior e menor
-    maior = menor = V[0];
-    for(i = 1; i < N; i++){
-     if(V[i] > maior) maior = V[i];
-     if(V[i] < menor) menor = V[i]; 
-    }
-
-//Inicializa baldes
-nroBaldes = (maior - menor) / TAM + 1;
-bd = (struct balde *) malloc(nroBaldes * sizeof(struct balde));
-for(i = 0; i <nroBaldes; i++)
- bd[i].qtd = 0;
-
-//Distribui os valores nos baldes
-for(i = 0; i < N; i++){
-    pos = (V[i] - menor)/TAM;
-    bd[pos].valores[bd[pos].qtd] = V[i];
-    bd[pos].qtd++;
-}
-//Ordena os baldes e coloca no array
-pos = 0;
-for(i = 0;N < nroBaldes; i++){
-    insertionSort(bd[i].valores, bd[i].qtd);
-    for(j = 0; j < bd[i].qtd; j++){
-        V[pos] = bd[i].valores[j];
-        pos++;
-    }
-}
- free(bd);
-}
-
-
-
-//================================================
-//Mergesort
-//================================================
-void merge(int arr[], int l, int m, int r)
-{
-    int i, j, k;
-    int n1 = m - l + 1;
-    int n2 = r - m;
-  
-    int L[n1], R[n2];
-  
-    for (i = 0; i < n1; i++)
-        L[i] = arr[l + i];
-    for (j = 0; j < n2; j++)
-        R[j] = arr[m + 1 + j];
-  
-    i = 0; 
-    j = 0; 
-    k = l; 
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        }
-        else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-  
-
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-  
-
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
-}
-  
-
-void mergeSort(int arr[], int l, int r)
-{
-    if (l < r) {
-
-        int m = l + (r - l) / 2;
-
-        mergeSort(arr, l, m);
-        mergeSort(arr, m + 1, r);
-  
-        merge(arr, l, m, r);
-    }
-}
-  
